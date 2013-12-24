@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="http://static.spytajsie.com/images/1/favicon.png">
+    <title>Shoutbox with nodejs</title>
+    <link href="https://itunixcdn.appspot.com/files/bootstrap/3.0.3/css/bootstrap.css" rel="stylesheet">
+    <link href="http://static.spytajsie.com/css/style1.css" rel="stylesheet">
+    <link href="http://static.spytajsie.com/css/sticky-footer.css" rel="stylesheet">
+  </head>
+
+  <body>
+    <!-- Static navbar -->
+    <div class="navbar navbar-default navbar-static-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand">NodeSB</a>
+        </div>
+      </div>
+    </div>
+
+<div id="wrap">
+    <div class="container">
+
+	<div class="row">
+	  <div class="col-md-8">
+			<div id="nickWrap">
+				<p>Enter a username:</p>
+				<p id="nickError"></p>
+				<form id="setNick">
+					<input size="35" id="nickname"></input>
+					<input type="submit" value="Wejdź"></input>
+				</form>
+			</div>
+
+			<div id="contentWrap">
+				<section class="box-a shoutbox">
+				    <header>
+					<h3 class="bar-h large">Shoutbox</h3>
+				    </header>
+
+				    <div class="body">
+					<div id="shoutbox">
+					    <div id="chat"></div>
+					</div>
+
+					<form id="send-message" class="input-group-btn">
+					    <span>Your message:</span>
+					    <div class="input-group">
+					      <input type="text" class="form-control" style="width: 100%;" id="message" maxlength="255">
+					      <span class="input-group-btn">
+						<button type="submit" class="btn btn-primary" type="button">Go!</button>
+					      </span>
+					    </div><!-- /input-group -->
+					</form>
+					<div id="error" style="color:red;font-size:11px;"></div>	
+				    </div>
+				</section>
+			</div>
+	  </div>
+
+	  <div class="col-md-4 users">
+		<div class="panel panel-default">
+		  <div class="bar-h large">Online users</div>
+		  <div class="panel-body">
+		    <div id="users"></div>
+		  </div>
+		</div>
+
+		<div class="panel panel-default">
+		  <div class="alert alert-info">Helpful information</div>
+		  <div class="panel-body">
+		    Private messages <code>/w &lt;userName&gt; &lt;yourMessage&gt;</code>
+		  </div>
+		</div>
+	  </div>
+
+	</div>
+
+    </div> <!-- /container -->
+</div> <!-- /wrap -->
+
+
+    <div id="footer">
+      <div class="container">
+        <p class="text-muted">proudly powered by <a href="http://nodejs.org/" target="_blank">nodejs</a>, data stored in the <a href="http://www.mongodb.org/" target="_blank">mongodb</a> database and outlook delivers <a href="http://getbootstrap.com/" target="_blank">bootstrap</a></p>
+      </div>
+    </div>
+
+	<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+	<script src="/socket.io/socket.io.js"></script>
+	<script>
+		jQuery(function($){
+			var socket = io.connect('http://localhost:3000');
+			var $nickForm = $('#setNick');
+			var $nickError = $('#nickError');
+			var $nickBox = $('#nickname');
+			var $users = $('#users');
+			var $messageForm = $('#send-message');
+			var $messageBox = $('#message');
+			var $chat = $('#chat');
+			var $error = $('#error');
+
+			$nickForm.submit(function(e){
+				e.preventDefault();
+				if ($nickBox.val().length >= 3) {
+					socket.emit('new user', $nickBox.val(), function(data){
+						if(data){
+							$('#nickWrap').hide();
+							$('#contentWrap').show();
+							$('.users').show();
+						} else{
+							$nickError.html('That username is already taken! Try again.');
+						}
+					});
+					$nickBox.val('');
+				} else {
+					$nickError.html('That username is to short! Try again.');
+				}
+			});
+			
+			socket.on('usernames', function(data){
+				var html = '';
+				for(var i=0; i < data.length; i++){
+					html += data[i] + '<br/>'
+				}
+				$users.html(html);
+			});
+			
+			$messageForm.submit(function(e){
+				e.preventDefault();
+				if ($messageBox.val().length >= 1) {
+					socket.emit('send message', $messageBox.val(), function(data){
+						$error.html(data);
+					});
+					$messageBox.val('');
+					$('#shoutbox').scrollTop(100000);
+					$error.html('');
+				} else {
+					$error.html('Your message is to short! Try again.');
+				}
+			});
+			
+			socket.on('load old msgs', function(docs){
+				for(var i=docs.length-1; i >= 0; i--){
+					displayMsg(docs[i]);
+				}
+			});
+			
+			socket.on('new message', function(data){
+				displayMsg(data);
+				$('#shoutbox').scrollTop(100000);
+			});
+			
+			function displayMsg(data){
+				$chat.append(data.time + ' | <a href="#"><b>' + data.nick + '  </b></a>: <span style="color:#111;">' + data.msg + '</span><br />');
+			}
+			
+			socket.on('whisper', function(data){
+				$chat.append('<span class="whisper"><b>' + data.nick + ': </b>' + data.msg + "</span><br/>");
+			});
+
+		});
+	</script>
+
+  </body>
+</html>
