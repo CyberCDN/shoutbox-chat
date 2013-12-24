@@ -1,38 +1,13 @@
 body{background-color:#FFFFFF;margin:0;font-family:arial,geneva,verdana,sans-serif;font-size:12px;color:#434343;}
 #chat{height:255px;}
 #shoutbox {height: 205px;overflow-y:scroll;}
-
-/*#contentWrap{display: none;width: 700px;}*/
 #contentWrap{display: none;}
-
 #chatWrap{float: left;border: 1px #000 solid;}
-
 .error{color: red;}
-
 .whisper{color: gray;font-style: italic;}
 #users, {width: 200px;}
 .users {display: none;width: 200px;}
 #shoutbox{border:1px solid #00438b;border-top-color:#1860ac;}
-#shoutboxHeader{display:block;height:27px;background:url('http://images.zapytaj.com.pl/belki.png') no-repeat 0 -121px;text-indent:-9999px;position:relative;}
-.shoutboxLarge{width:796px;}
-.shoutboxSmall{width:169px;}
-#zmienRozmiar{display:block;width:17px;height:27px;line-height:1px;text-indent:-9999px;position:absolute;top:0;right:22px;}
-.shoutboxSmall #zmienRozmiar{background:url('http://images.zapytaj.com.pl/belki.png') no-repeat -757px -121px;}
-.shoutboxLarge #zmienRozmiar{background:url('http://images.zapytaj.com.pl/belki.png') no-repeat -813px -121px;}
-#shoutboxReplyContainer.shoutboxSmall,
-#shoutboxReplyContainer.shoutboxLarge{background:#00438b;position:relative;height:20px !important;width:169px !important;margin-top:2px;}
-#shoutboxReplyContainer.shoutboxLarge{width:796px !important;}
-#shoutboxReplyContainer.shoutboxSmall .trescWraper,
-#shoutboxReplyContainer.shoutboxLarge .trescWraper{height:18px;overflow:hidden;background:#FFF;/* margin:0 1px;*/
-width:148px;display:block;position:absolute;top:1px;left:1px;}
-#shoutboxReplyContainer.shoutboxLarge .trescWraper{width:775px;}
-#shoutboxReplyContainer .sbtnWraper{width:18px;height:18px;background:#3a73cc;/* margin:0 1px;*/
-display:block;position:absolute;top:1px;right:1px;overflow:hidden;}
-#shoutboxReplyContainer.shoutboxSmall #tresc,
-#shoutboxReplyContainer.shoutboxLarge #tresc{height:18px !important;line-height:18px !important;width:146px;border:none;outline:none;-webkit-appearance:none;background:#FFF;}
-#shoutboxReplyContainer.shoutboxLarge #tresc{width:773px;}
-#sbtn{width:18px;height:18px;display:block;line-height:18px;background:url('http://images.zapytaj.com.pl/zapytajSprites.png') no-repeat -585px -103px;overflow:hidden;text-indent:-9999px;}
-#zamknijShoutbox{display:block;width:22px;height:27px;line-height:1px;text-indent:-9999px;background:url('http://images.zapytaj.com.pl/belki.png') no-repeat -774px -121px;position:absolute;top:0;right:0;}
 input{background-color:#F5F5F5;border:1px solid #879EB4;margin-top:1px;margin-bottom:1px;}
 .bar-h{background-color:#0096c8;-webkit-border-radius:5px;-moz-border-radius:5px;border-radius:5px;padding:5px 12px 6px 10px;-moz-box-sizing:border-box;-webkit-box-sizing:border-box;box-sizing:border-box;font-size:15px;line-height:1;margin:0 0 5px;color:#fff;text-shadow:-1px -1px 0 #037ead;position:relative}
 .bar-h.large{padding:11px 12px 9px;font-size:18px}
