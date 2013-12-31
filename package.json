@@ -1,6 +1,6 @@
 {
   "name": "shoutbox-chat",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "main": "app.js",
   "dependencies": {
     "socket.io": "~0.9.16",

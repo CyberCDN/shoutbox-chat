@@ -5,7 +5,7 @@ A simple chat system with private messages, using Node.js and Socket.io
 
 * [Demo](http://sb.spytajsie.com/)
 
-![Shoutbox Chat](http://i.imgur.com/BaTU9wQ.png "Shoutbox Chat")
+![Shoutbox Chat](http://i.imgur.com/BFPMmmY.png "Shoutbox Chat")
 
 
 Requirements

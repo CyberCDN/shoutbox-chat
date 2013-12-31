@@ -1,0 +1,8 @@
+#stats{display:none;} #tresc{width: 95%;}
+#shoutbox {height: 320px;overflow-y:scroll;}
+#contentWrap{display: none;}
+.error{color: red;}
+.whisper{color: gray;font-style: italic;}
+.users {display: none;width: 200px;}
+input{background-color:#F5F5F5;border:1px solid #879EB4;margin-top:1px;margin-bottom:1px;}
+

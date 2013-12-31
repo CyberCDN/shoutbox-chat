@@ -1,54 +1,94 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Chattybox with nodejs :3</title>
     <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="shortcut icon" href="assets/css/favicon.png">
-    <title>Shoutbox with nodejs</title>
-    <link href="https://itunixcdn.appspot.com/files/bootstrap/3.0.3/css/bootstrap.css" rel="stylesheet">
-    <link href="assets/css/style.css" rel="stylesheet">
-    <link href="assets/css/sticky-footer.css" rel="stylesheet">
-  </head>
-
-  <body>
-    <!-- Static navbar -->
-    <div class="navbar navbar-default navbar-static-top" role="navigation">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand">NodeSB</a>
+    <meta name="keywords" content="">
+    <link rel="stylesheet" type="text/css" href="/assets/style/reset.css" /> 
+    <link rel="stylesheet" type="text/css" href="/assets/style/root.css" /> 
+    <link rel="stylesheet" type="text/css" href="/assets/style/lionbars.css" /> 
+    <link rel="stylesheet" type="text/css" href="/assets/style/custom.css" />
+    <link rel="shortcut icon" href="/assets/css/favicon.png" type="image/x-icon" />
+</head>
+<body> 
+ 
+<div class="wrapper">
+    <div id="header"> 
+    	<div class="logo">	
+    		<a href="/"><img src="Chattybox.png" width="112" height="35" alt="logo"/></a>
+    	</div>
+<!--
+        <div id="profilebox">
+            <a href="#" class="display">
+            	<img src="themes/default/img/simple-profile-img.jpg" width="33" height="33" alt="profile"/>
+		<b>Witaj</b><span>gość</span>
+            </a>            
+            <div class="profilemenu">
+            	<ul>
+	                	<li><a href="/login.php?page=register">Zarejestruj się</a></li>
+				<li><a href="/login.php?page=login">Zaloguj się</a></li>
+		</ul>
+            </div>            
         </div>
-      </div>
+-->        
+    	<div class="clear"></div>
     </div>
 
-<div id="wrap">
-    <div class="container">
 
-	<div class="row">
-	  <div class="col-md-8">
+	<div id="main">
+	    <div id="sidebar">
+		<div id="searchbox">
+		    <div class="in">
+		        <form id="form1" name="form1" method="post" action="/search_user.php">
+		            <input name="search_nick" type="text" class="input" id="textfield" onfocus="$(this).attr('class','input-hover')"
+		            onblur="$(this).attr('class','input')" />
+		        </form>
+		    </div>
+		</div>
+		<div id="sidemenu">
+		    <div style="height: 400px;">
+		        <ul style="display: none;" class="usersp">
+		            <!-- <span class="ballon">2</span> -->
+		            <!-- <li><h2><a><img src="themes/default/img/icons/sidemenu/file.png" width="16" height="16" alt="icon"/>Users Online <span class="ballon">0</span>  </a></h2></li> -->
+		            <li><h2><a>Users Online <span class="ballon" id="countuser">0</span>  </a></h2></li>
+		            <li><h2><a> <div id="users"></div> </a></h2></li>
+		        </ul>
+		    </div>
+		</div>
+		<script>
+		    //Initialize
+		    $(document).ready(function() {
+		        $('#sidemenu').lionbars();
+		    });
+		</script>
+	    </div>
+	    <div id="page">
+
+
+                <div class="page-title">
+                	<div class="in">
+                    		<div class="titlebar">	
+					<h2>Chattybox with Node.js</h2>
+					Keep calm and have fun <span id="usernick"></span>
+				</div>
+		           <div class="clear"></div>
+                    </div>
+                </div>
+
+		<div class="content">
+
 			<div id="nickWrap">
 				<p>Enter a username:</p>
-				<p id="nickError"></p>
 				<form id="setNick">
 					<input size="35" id="nickname"></input>
 					<input type="submit" value="Wejdź"></input>
 				</form>
+				<p id="nickError" style="color: #ff0000; padding-top: 10px;"></p>
 			</div>
 
 			<div id="contentWrap">
 				<section class="box-a shoutbox">
-				    <header>
-					<h3 class="bar-h large">Shoutbox</h3>
-				    </header>
-
 				    <div class="body">
 					<div id="shoutbox">
 					    <div id="chat"></div>
@@ -63,116 +103,139 @@
 					      </span>
 					    </div><!-- /input-group -->
 					</form>
-					<div id="error" style="color:red;font-size:11px;"></div>	
+					<div id="error" style="color:red;font-size:11px;"></div>
 				    </div>
 				</section>
 			</div>
-	  </div>
 
-	  <div class="col-md-4 users">
-		<div class="panel panel-default">
-		  <div class="bar-h large">Online users</div>
-		  <div class="panel-body">
-		    <div id="users"></div>
-		  </div>
+				<div id="usersadm" style="display: none;"></div>
 		</div>
-
-		<div class="panel panel-default">
-		  <div class="alert alert-info">Helpful information</div>
-		  <div class="panel-body">
-		    Private messages <code>/w &lt;userName&gt; &lt;yourMessage&gt;</code>
-		  </div>
-		</div>
-	  </div>
-
+	    </div>
+	    <div class="clear"></div>
 	</div>
 
-    </div> <!-- /container -->
-</div> <!-- /wrap -->
 
 
+    
+    <!-- START FOOTER -->
     <div id="footer">
-      <div class="container">
-        <p class="text-muted">proudly powered by <a href="http://nodejs.org/" target="_blank">nodejs</a>, data stored in the <a href="http://www.mongodb.org/" target="_blank">mongodb</a> database and outlook delivers <a href="http://getbootstrap.com/" target="_blank">bootstrap</a></p>
-      </div>
+    	<div class="left-column">Copyright 2012 - All rights reserved. By: <a href="http://itunix.eu" target="_blank">ITUnix.eu</a></div>
+        <div class="right-column"> proudly powered by <a href="http://nodejs.org/" target="_blank">nodejs</a>, data stored in the <a href="http://www.mongodb.org/" target="_blank">mongodb</a> database and outlook delivers <a href="http://getbootstrap.com/" target="_blank">bootstrap</a> </div>
 	<a href="https://github.com/modInfo/shoutbox-chat"><img style="position: fixed; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="Fork me on GitHub"></a>
     </div>
+    <!-- END FOOTER -->
 
-	<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
-	<script src="/socket.io/socket.io.js"></script>
-	<script>
-		jQuery(function($){
-			var socket = io.connect('http://localhost:3000');
-			var $nickForm = $('#setNick');
-			var $nickError = $('#nickError');
-			var $nickBox = $('#nickname');
-			var $users = $('#users');
-			var $messageForm = $('#send-message');
-			var $messageBox = $('#message');
-			var $chat = $('#chat');
-			var $error = $('#error');
+</div>
 
-			$nickForm.submit(function(e){
-				e.preventDefault();
-				if ($nickBox.val().length >= 3) {
-					socket.emit('new user', $nickBox.val(), function(data){
-						if(data){
-							$('#nickWrap').hide();
-							$('#contentWrap').show();
-							$('.users').show();
-						} else{
-							$nickError.html('That username is already taken! Try again.');
-						}
-					});
-					$nickBox.val('');
-				} else {
-					$nickError.html('That username is to short! Try again.');
-				}
-			});
-			
-			socket.on('usernames', function(data){
-				var html = '';
-				for(var i=0; i < data.length; i++){
-					html += data[i] + '<br/>'
-				}
-				$users.html(html);
-			});
-			
-			$messageForm.submit(function(e){
-				e.preventDefault();
-				if ($messageBox.val().length >= 1) {
-					socket.emit('send message', $messageBox.val(), function(data){
-						$error.html(data);
-					});
-					$messageBox.val('');
-					$('#shoutbox').scrollTop(100000);
-					$error.html('');
-				} else {
-					$error.html('Your message is to short! Try again.');
-				}
-			});
-			
-			socket.on('load old msgs', function(docs){
-				for(var i=docs.length-1; i >= 0; i--){
-					displayMsg(docs[i]);
-				}
-			});
-			
-			socket.on('new message', function(data){
-				displayMsg(data);
-				$('#shoutbox').scrollTop(100000);
-			});
-			
-			function displayMsg(data){
-				$chat.append(data.time + ' | <a href="#"><b>' + data.nick + '  </b></a>: <span style="color:#111;">' + data.msg + '</span><br />');
+<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+	jQuery(function($){
+		var socket = io.connect('http://localhost:3000');
+		var $nickForm = $('#setNick');
+		var $nickError = $('#nickError');
+		var $nickBox = $('#nickname');
+		var $users = $('#users');
+		var $messageForm = $('#send-message');
+		var $messageBox = $('#message');
+		var $chat = $('#chat');
+		var $error = $('#error');
+		var $usersadm = $('#usersadm');
+		var $usernick = $('#usernick');
+		var $countuser = $('#countuser');
+
+		$nickForm.submit(function(e){
+			e.preventDefault();
+			if ($nickBox.val().length >= 3 && $nickBox.val().length < 15) {
+				socket.emit('new user', $nickBox.val(), function(data){
+					if(data){
+						$('#nickWrap').hide();
+						$('#contentWrap').show();
+						$('.users').show(); $('.usersp').show();
+					} else{
+						$nickError.html('That username is already taken! Try again.');
+					}
+				});
+				$nickBox.val('');
+			} else {
+				$nickError.html('That username is to short or to long! Try again. Min 3/Max 15');
 			}
-			
-			socket.on('whisper', function(data){
-				$chat.append('<span class="whisper"><b>' + data.nick + ': </b>' + data.msg + "</span><br/>");
-			});
-
 		});
-	</script>
+		
+		socket.on('usernames', function(data){
+			var html = '';
+			for(var i=0; i < data.length; i++){
+				html += data[i] + '<br/>'
+			}
+			$users.html(html);
+		});
+		
+		socket.on('usersadm', function(data){
+			var html = '';
+			for(var i=0; i < data.length; i++){
+				html += data[i] + '<br/>'
+			}
+			$usersadm.html(html);
+		});
 
-  </body>
+		socket.on('show adm', function(data){
+			if (data['msg'] == 'ok') $('#usersadm').show();
+		});
+
+		$messageForm.submit(function(e){
+			e.preventDefault();
+			if ($messageBox.val().length >= 1) {
+				socket.emit('send message', $messageBox.val(), function(data){
+					$error.html(data);
+				});
+				$messageBox.val('');
+				$('#shoutbox').scrollTop(100000);
+				$error.html('');
+			} else {
+				$error.html('Your message is to short! Try again.');
+			}
+		});
+		
+		socket.on('load old msgs', function(docs){
+			for(var i=docs.length-1; i >= 0; i--){
+				displayMsg(docs[i]);
+			}
+		});
+
+		socket.on('user nickname', function(nick){
+			$usernick.html(nick);
+		});
+
+		socket.on('count users', function(cusers){
+			$countuser.html(cusers);
+		});
+
+		socket.on('new message', function(data){
+			displayMsg(data);
+			$('#shoutbox').scrollTop(100000);
+		});
+		
+		function displayMsg(data){
+			$chat.append(data.time + ' | <a href="#" class="set" title="' + data.nick + '"><b>' + data.nick + '  </b></a>: <span style="color:#111;">' + data.msg + '</span><br />');
+		}
+		
+		socket.on('whisper', function(data){
+			$chat.append('<span class="whisper"><b>' + data.nick + ': </b>' + data.msg + "</span><br/>");
+		});
+
+
+		$('body').on('click','.set',function(){
+		    var id = $(this).attr("id");
+		    var title = $(this).attr("title");
+		    if (typeof id != 'undefined') {
+			    $('#message').val('/k ' + title + ' ' + id);
+		    } else {
+			    $('#message').val('/w ' + title + ' ');
+		    }
+		});
+
+	});
+</script>
+
+</body>
 </html>
