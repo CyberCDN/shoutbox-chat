@@ -27,8 +27,6 @@ app.get('/', function (req, res) {
 function pad(n) {
     return ( n<10 ? '0'+ n : n);
 }
-var currentDate = new Date(),
-    msgTime = pad(currentDate.getHours()) +":"+ pad(currentDate.getMinutes()) +":"+ pad(currentDate.getSeconds()); //msgTime = pad(currentDate.getHours()) +":"+ pad(currentDate.getMinutes());
 
 io.sockets.on('connection', function(socket){
 	var address = socket.handshake.address;
@@ -59,6 +57,9 @@ io.sockets.on('connection', function(socket){
 			chatClients[clientsAdmin] = socket; // FIXME
 			countusers++;
 			updateNicknames();
+
+			var currentDate = new Date(),
+			    msgTime = pad(currentDate.getHours()) +":"+ pad(currentDate.getMinutes()) +":"+ pad(currentDate.getSeconds());
 
 			socket.emit('new message', {msg: 'Welcome on the chat, keep calm and have fun ' + socket.nickname + ' :)', nick: '*', time: msgTime});
 		}
@@ -97,6 +98,9 @@ io.sockets.on('connection', function(socket){
 				var msg = msg.substring(ind + 1);
 				if(name in users){
 					if (socket.nickname === undefined) {
+						var currentDate = new Date(),
+						    msgTime = pad(currentDate.getHours()) +":"+ pad(currentDate.getMinutes()) +":"+ pad(currentDate.getSeconds());
+
 						socket.emit('new message', {msg: 'Error! Please log in again!', nick: '*', time: msgTime}); 
 					} else {
 						users[name].emit('whisper', {msg: msg, nick: '=> From: ' + socket.nickname});
@@ -129,6 +133,9 @@ io.sockets.on('connection', function(socket){
 			}
 
 		} else{
+			var currentDate = new Date(),
+			    msgTime = pad(currentDate.getHours()) +":"+ pad(currentDate.getMinutes()) +":"+ pad(currentDate.getSeconds());
+
 			if (socket.nickname === undefined) {
 				socket.emit('new message', {msg: 'Error! Please log in again!', nick: '*', time: msgTime}); 
 			} else {
