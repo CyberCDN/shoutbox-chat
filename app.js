@@ -96,11 +96,12 @@ io.sockets.on('connection', function(socket){
 				var name = msg.substring(0, ind);
 				var msg = msg.substring(ind + 1);
 				if(name in users){
-					users[name].emit('whisper', {msg: msg, nick: '=> From: ' + socket.nickname});
-					//users[socket.nickname].emit('whisper', {msg: msg, nick: '=> To: ' + name});
-					socket.emit('get info', 'Your private message has been successfully sent to ' + name);
-					console.log('message sent is: ' + msg);
-					console.log('Whisper!');
+					if (socket.nickname === undefined) {
+						socket.emit('new message', {msg: 'Error! Please log in again!', nick: '*', time: msgTime}); 
+					} else {
+						users[name].emit('whisper', {msg: msg, nick: '=> From: ' + socket.nickname});
+						socket.emit('get info', 'Your private message has been successfully sent to ' + name);
+					}
 				} else{
 					callback('Error!  Enter a valid user.');
 				}
@@ -114,10 +115,9 @@ io.sockets.on('connection', function(socket){
 				var name = msg.substring(0, ind);
 				var msg = msg.substring(ind + 1);
 				if(name in users){
-					if(administrator) {
+					if(administrator && socket.nickname !== undefined) {
 					    io.sockets.emit('whisper', {msg: socket.nickname + " kicked " + name + "! If you want, you can now log in again.", nick: socket.nickname});
-							// FIXME to trzeba zrobić duuużo lepiej...
-		                                    	socket.manager.onClientDisconnect(msg);
+		                            socket.manager.onClientDisconnect(msg);
 					} else{
 						callback('You have no permission to this!');
 					}
@@ -129,11 +129,15 @@ io.sockets.on('connection', function(socket){
 			}
 
 		} else{
-			var newMsg = new Chat({msg: msg, nick: socket.nickname, time: msgTime});
-			newMsg.save(function(err){
-				if(err) throw err;
-				io.sockets.emit('new message', {msg: msg, nick:  socket.nickname, time: msgTime});
-			});
+			if (socket.nickname === undefined) {
+				socket.emit('new message', {msg: 'Error! Please log in again!', nick: '*', time: msgTime}); 
+			} else {
+				var newMsg = new Chat({msg: msg, nick: socket.nickname, time: msgTime});
+				newMsg.save(function(err){
+					if(err) throw err;
+					io.sockets.emit('new message', {msg: msg, nick:  socket.nickname, time: msgTime});
+				});
+			}
 		}
 	});
 	
