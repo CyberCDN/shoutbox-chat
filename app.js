@@ -6,41 +6,28 @@ var express = require('express'),
     users = {};
     server.listen(3000);
 var requestify = require('requestify');
+var countusers = 0;
 
-    chatClients = new Object();
-    config = require("./config");
+chatClients = new Object();
+config = require("./config");
 
 mongoose.connect('mongodb://localhost/chat', function (err) {
-    if (err) {
-        console.log(err);
-    } else {
-        console.log('Connected to mongodb!');
-    }
+    if (err) console.log(err);
+    else console.log('Connected to mongodb!');
 });
 
-var chatSchema = mongoose.Schema({
-	nick: String,
-	msg: String,
-	time: String,
-	created: {type: Date, default: Date.now}
-});
-
+var chatSchema = mongoose.Schema({ nick: String, msg: String, time: String, created: {type: Date, default: Date.now} });
 var Chat = mongoose.model('Message', chatSchema);
 
-app.get('/', function (req, res) {
-    res.sendfile(__dirname + '/index.html');
+app.get('/', function (req, res) { 
+  res.sendfile(__dirname + '/index.html'); 
 });
 
-// If n < 10, add a leading 0
 function pad(n) {
     return ( n<10 ? '0'+ n : n);
 }
-
 var currentDate = new Date(),
-    msgTime = pad(currentDate.getHours()) +":"+ pad(currentDate.getMinutes()) +":"+ pad(currentDate.getSeconds());
-    //msgTime = pad(currentDate.getHours()) +":"+ pad(currentDate.getMinutes());
-
-var countusers = 0;
+    msgTime = pad(currentDate.getHours()) +":"+ pad(currentDate.getMinutes()) +":"+ pad(currentDate.getSeconds()); //msgTime = pad(currentDate.getHours()) +":"+ pad(currentDate.getMinutes());
 
 io.sockets.on('connection', function(socket){
 	var address = socket.handshake.address;
