@@ -6,6 +6,7 @@ var express = require('express'),
     users = {};
     server.listen(3000);
 var requestify = require('requestify');
+    net = require("net");
 var countusers = 0;
 
 chatClients = new Object();
