@@ -1,88 +1,41 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Chattybox with nodejs :3</title>
+    <meta charset="utf-8">
+    <title>Chattybox with nodejs :3</title>
     <meta name="description" content="">
     <meta name="keywords" content="">
-    <link rel="stylesheet" type="text/css" href="/assets/style/reset.css" /> 
-    <link rel="stylesheet" type="text/css" href="/assets/style/root.css" /> 
-    <link rel="stylesheet" type="text/css" href="/assets/style/lionbars.css" /> 
-    <link rel="stylesheet" type="text/css" href="/assets/style/custom.css" />
+    <link rel="stylesheet" type="text/css" href="/assets/css/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="/assets/css/styles.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/custom.css">
     <link rel="shortcut icon" href="/assets/css/favicon.png" type="image/x-icon" />
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
 </head>
-<body> 
- 
-<div class="wrapper">
-    <div id="header"> 
-    	<div class="logo">	
-    		<a href="/"><img src="Chattybox.png" width="112" height="35" alt="logo"/></a>
-    	</div>
-<!--
-        <div id="profilebox">
-            <a href="#" class="display">
-            	<img src="themes/default/img/simple-profile-img.jpg" width="33" height="33" alt="profile"/>
-		<b>Witaj</b><span>gość</span>
-            </a>            
-            <div class="profilemenu">
-            	<ul>
-	                	<li><a href="/login.php?page=register">Zarejestruj się</a></li>
-				<li><a href="/login.php?page=login">Zaloguj się</a></li>
-		</ul>
-            </div>            
+
+<body>
+    <div class="topbar">
+        <div class="fill">
+            <div class="container">
+                <a class="brand">Chattybox</a>
+            </div>
         </div>
--->        
-    	<div class="clear"></div>
     </div>
 
-
-	<div id="main">
-	    <div id="sidebar">
-		<div id="searchbox">
-		    <div class="in">
-		        <form>
-		            <input type="text" class="input" id="textfield" onfocus="$(this).attr('class','input-hover')"
-		            onblur="$(this).attr('class','input')" />
-		        </form>
-		    </div>
-		</div>
-		<div id="sidemenu">
-		    <div style="height: 400px;">
-		        <ul style="display: none;" class="usersp">
-		            <!-- <span class="ballon">2</span> -->
-		            <!-- <li><h2><a><img src="themes/default/img/icons/sidemenu/file.png" width="16" height="16" alt="icon"/>Users Online <span class="ballon">0</span>  </a></h2></li> -->
-		            <li><h2><a>Users Online <span class="ballon" id="countuser">0</span>  </a></h2></li>
-		            <li><h2><a> <div id="users"></div> </a></h2></li>
-		        </ul>
-		    </div>
-		</div>
-		<script>
-		    //Initialize
-		    $(document).ready(function() {
-		        $('#sidemenu').lionbars();
-		    });
-		</script>
-	    </div>
-	    <div id="page">
-
-
-                <div class="page-title">
-                	<div class="in">
-                    		<div class="titlebar">	
-					<h2>Chattybox with Node.js</h2>
-					Keep calm and have fun <span id="usernick"></span>
-				</div>
-		           <div class="clear"></div>
-                    </div>
-                </div>
-
-		<div class="content">
+    <div class="container">
+        <div class="content">
+            <div class="page-header">
+                <h2 id="title">Chattybox with Node.js <small>Keep calm and have fun <span id="usernick"></span></small></h2>
+            </div>
+            <div class="row">
+                <div class="span12">
 
 			<div id="nickWrap">
 				<p>Enter a username:</p>
 				<form id="setNick">
 					<input size="35" id="nickname"></input>
-					<input type="submit" value="Wejdź"></input>
+					<input type="submit" value="Go"></input>
 				</form>
 				<p id="nickError" style="color: #ff0000; padding-top: 10px;"></p>
 			</div>
@@ -91,41 +44,40 @@
 				<section class="box-a shoutbox">
 				    <div class="body">
 					<div id="shoutbox">
-					    <div id="chat"></div>
+					    <pre id="chat"></pre>
 					</div>
-
 					<form id="send-message" class="input-group-btn">
-					    <span>Your message:</span>
 					    <div class="input-group">
-					      <input type="text" class="form-control" style="width: 100%;" id="message" maxlength="255">
-					      <span class="input-group-btn">
-						<button type="submit" class="btn btn-primary" type="button">Go!</button>
-					      </span>
+					      <input type="text" class="form-control" style="width: 95%;" id="message" maxlength="255" placeholder="Your message">
 					    </div><!-- /input-group -->
 					</form>
 					<div id="error" style="color:red;font-size:11px;"></div>
 				    </div>
 				</section>
+				<span style="float: right;">to write somebody a private message, click on the nickname</span> <br />
+				<span style="float: right; color: #3c763d;" id="getinfo"></span>
 			</div>
+			<div id="usersadm" style="display: none;"></div>
 
-				<div id="usersadm" style="display: none;"></div>
-		</div>
-	    </div>
-	    <div class="clear"></div>
-	</div>
-
-
-
+                </div>
+                <div class="span4">
+                    <div class="users">
+                        <pre class="prettyprint scrollcontent userlist"><ul id="users" class="unstyled"></ul></pre>
+                    </div>
+              </div> <!-- /span4 -->
+            </div> <!-- /row -->
+        </div> <!-- /content -->
     
-    <!-- START FOOTER -->
-    <div id="footer">
-    	<div class="left-column">Copyright 2012 - All rights reserved. By: <a href="http://itunix.eu" target="_blank">ITUnix.eu</a></div>
-        <div class="right-column"> proudly powered by <a href="http://nodejs.org/" target="_blank">nodejs</a>, data stored in the <a href="http://www.mongodb.org/" target="_blank">mongodb</a> database and outlook delivers <a href="http://getbootstrap.com/" target="_blank">bootstrap</a> </div>
-	<a href="https://github.com/modInfo/shoutbox-chat"><img style="position: fixed; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="Fork me on GitHub"></a>
-    </div>
-    <!-- END FOOTER -->
 
-</div>
+
+        <footer>
+	    	<div>Copyright 2012 - 2014 All rights reserved. By: <a href="http://itunix.eu" target="_blank">ITUnix.eu</a></div>
+		<div> proudly powered by <a href="http://nodejs.org/" target="_blank">nodejs</a>, data stored in the <a href="http://www.mongodb.org/" target="_blank">mongodb</a> database and outlook delivers <a href="http://getbootstrap.com/" target="_blank">bootstrap</a> </div>
+		<a href="https://github.com/modInfo/shoutbox-chat"><img style="position: fixed; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="Fork me on GitHub"></a>
+        </footer>
+    
+    </div> <!-- /container -->
+
 
 <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
 <script src="/socket.io/socket.io.js"></script>
@@ -143,15 +95,18 @@
 		var $usersadm = $('#usersadm');
 		var $usernick = $('#usernick');
 		var $countuser = $('#countuser');
+		var $getinfo = $('#getinfo');
 
 		$nickForm.submit(function(e){
 			e.preventDefault();
-			if ($nickBox.val().length >= 3 && $nickBox.val().length < 15) {
-				socket.emit('new user', $nickBox.val(), function(data){
+			var nickv = $nickBox.val();
+			if (nickv.length >= 3 && nickv.length < 15) {
+				nickv = nickv.replace(/\s/g, '');
+				socket.emit('new user', nickv, function(data){
 					if(data){
 						$('#nickWrap').hide();
 						$('#contentWrap').show();
-						$('.users').show(); $('.usersp').show();
+						$('#users').show(); $('.users').show();
 					} else{
 						$nickError.html('That username is already taken! Try again.');
 					}
@@ -189,7 +144,7 @@
 					$error.html(data);
 				});
 				$messageBox.val('');
-				$('#shoutbox').scrollTop(100000);
+				$('#chat').scrollTop(100000);
 				$error.html('');
 			} else {
 				$error.html('Your message is to short! Try again.');
@@ -206,21 +161,28 @@
 			$usernick.html(nick);
 		});
 
+		socket.on('get info', function(infos){
+			$getinfo.html(infos);
+			$('#getinfo').show('fast');
+			$('#getinfo').delay(15000).fadeOut('slow');
+		});
+
 		socket.on('count users', function(cusers){
 			$countuser.html(cusers);
 		});
 
 		socket.on('new message', function(data){
 			displayMsg(data);
-			$('#shoutbox').scrollTop(100000);
+			$('#chat').scrollTop(100000);
 		});
 		
 		function displayMsg(data){
-			$chat.append(data.time + ' | <a href="#" class="set" title="' + data.nick + '"><b>' + data.nick + '  </b></a>: <span style="color:#111;">' + data.msg + '</span><br />');
+			$chat.append(data.time + ' | <span class="set" title="' + data.nick + '"><span class="nickname">&lt;' + data.nick + '&gt;</span></span> <span style="color:#111;">' + data.msg + '</span><br />');
 		}
 		
 		socket.on('whisper', function(data){
 			$chat.append('<span class="whisper"><b>' + data.nick + ': </b>' + data.msg + "</span><br/>");
+			$('#chat').scrollTop(100000);
 		});
 
 
@@ -234,8 +196,10 @@
 		    }
 		});
 
+
 	});
 </script>
+
 
 </body>
 </html>

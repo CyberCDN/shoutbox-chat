@@ -4,14 +4,11 @@ var express = require('express'),
     io = require('socket.io').listen(server),
     mongoose = require('mongoose'),
     users = {};
-	
     server.listen(3000);
+var requestify = require('requestify');
 
     chatClients = new Object();
-
     config = require("./config");
-    net = require("net");
-var requestify = require('requestify');
 
 mongoose.connect('mongodb://localhost/chat', function (err) {
     if (err) {
@@ -34,6 +31,15 @@ app.get('/', function (req, res) {
     res.sendfile(__dirname + '/index.html');
 });
 
+// If n < 10, add a leading 0
+function pad(n) {
+    return ( n<10 ? '0'+ n : n);
+}
+
+var currentDate = new Date(),
+    msgTime = pad(currentDate.getHours()) +":"+ pad(currentDate.getMinutes()) +":"+ pad(currentDate.getSeconds());
+    //msgTime = pad(currentDate.getHours()) +":"+ pad(currentDate.getMinutes());
+
 var countusers = 0;
 
 io.sockets.on('connection', function(socket){
@@ -43,7 +49,7 @@ io.sockets.on('connection', function(socket){
 	var userip = address.address;
 
 	var query = Chat.find({});
-	query.sort('-created').limit(24).exec(function(err, docs){
+	query.sort('-created').limit(32).exec(function(err, docs){
 		if(err) throw err;
 		socket.emit('load old msgs', docs);
 	});
@@ -57,6 +63,7 @@ io.sockets.on('connection', function(socket){
 			callback(false);
 		} else{
 			callback(true);
+			data = data.replace(/\s/g, '');
 			socket.nickname = data;
 			users[socket.nickname] = socket;
 
@@ -64,6 +71,8 @@ io.sockets.on('connection', function(socket){
 			chatClients[clientsAdmin] = socket; // FIXME
 			countusers++;
 			updateNicknames();
+
+			socket.emit('new message', {msg: 'Welcome on the chat, keep calm and have fun ' + socket.nickname + ' :)', nick: '*', time: msgTime});
 		}
 	});
 	
@@ -79,7 +88,7 @@ io.sockets.on('connection', function(socket){
 
 
 		function shorter(urlto) { // FIXME
-		    requestify.get('http://shorterapi/shorten.php?longurl=' + urlto).then(function(response) {
+		    requestify.get('http://url.itunix.eu/shorten.php?longurl=' + urlto).then(function(response) {
 			return response.getBody();
 		    });
 		}
@@ -99,8 +108,9 @@ io.sockets.on('connection', function(socket){
 				var name = msg.substring(0, ind);
 				var msg = msg.substring(ind + 1);
 				if(name in users){
-					users[name].emit('whisper', {msg: msg, nick: '<= From: ' + socket.nickname});
-					users[socket.nickname].emit('whisper', {msg: msg, nick: '=> To: ' + name});
+					users[name].emit('whisper', {msg: msg, nick: '=> From: ' + socket.nickname});
+					//users[socket.nickname].emit('whisper', {msg: msg, nick: '=> To: ' + name});
+					socket.emit('get info', 'Your private message has been successfully sent to ' + name);
 					console.log('message sent is: ' + msg);
 					console.log('Whisper!');
 				} else{
@@ -131,19 +141,10 @@ io.sockets.on('connection', function(socket){
 			}
 
 		} else{
-			// If n < 10, add a leading 0
-			function pad(n) {
-			    return ( n<10 ? '0'+ n : n);
-			}
-
-			var currentDate = new Date(),
-			    msgTime = pad(currentDate.getHours()) +":"+ pad(currentDate.getMinutes()) +":"+ pad(currentDate.getSeconds());
-			    //msgTime = pad(currentDate.getHours()) +":"+ pad(currentDate.getMinutes());
-
 			var newMsg = new Chat({msg: msg, nick: socket.nickname, time: msgTime});
 			newMsg.save(function(err){
 				if(err) throw err;
-				io.sockets.emit('new message', {msg: msg, nick: socket.nickname, time: msgTime});
+				io.sockets.emit('new message', {msg: msg, nick:  socket.nickname, time: msgTime});
 			});
 		}
 	});
