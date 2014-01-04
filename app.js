@@ -3,14 +3,13 @@ var express = require('express'),
     server = require('http').createServer(app),
     io = require('socket.io').listen(server),
     mongoose = require('mongoose'),
+    net = require("net"),
+    countusers = 0,
+    config = require("./config"),
     users = {};
     server.listen(3000);
-var requestify = require('requestify');
-    net = require("net");
-var countusers = 0;
 
 chatClients = new Object();
-config = require("./config");
 
 mongoose.connect('mongodb://localhost/chat', function (err) {
     if (err) console.log(err);
@@ -30,8 +29,6 @@ function pad(n) {
 
 io.sockets.on('connection', function(socket){
 	var address = socket.handshake.address;
-	//var session = socket.handshake.session;
-	console.log("New connection from " + address.address + ":" + address.port);
 	var userip = address.address;
 
 	var query = Chat.find({});
@@ -75,20 +72,13 @@ io.sockets.on('connection', function(socket){
 
 	socket.on('send message', function(data, callback){
 
-
-		function shorter(urlto) { // FIXME
-		    requestify.get('http://url.itunix.eu/shorten.php?longurl=' + urlto).then(function(response) {
-			return response.getBody();
-		    });
-		}
-
 		function urls(text) {
 		    var exp = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
 		    return text.replace(exp,"<a href='$1' target='_blank'>[LINK]</a>");
 		}
 
 		var msg = urls(data.trim());
-		console.log('after trimming message is: ' + msg);
+		var msg = msg.replace(/\s+/g, ' ');
 
 		if(msg.substr(0,3) === '/w '){
 			msg = msg.substr(3);
