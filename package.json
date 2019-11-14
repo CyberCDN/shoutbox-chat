@@ -5,7 +5,7 @@
   "dependencies": {
     "socket.io": "~0.9.16",
     "express": "~3.2.6",
-    "mongoose": "~3.6.16"
+    "mongoose": "~5.7.10"
   },
   "repository": "git://github.com/modinfo/shoutbox-chat.git",
   "license": "MIT"
